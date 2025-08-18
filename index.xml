@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<rss version="2.0">
+    <channel>
+      <title>Quartz 4</title>
+      <link>https://quartz.jzhao.xyz</link>
+      <description>Last 10 notes on Quartz 4</description>
+      <generator>Quartz -- quartz.jzhao.xyz</generator>
+      <item>
+    <title>20250212</title>
+    <link>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/20250212</link>
+    <guid>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/20250212</guid>
+    <description><![CDATA[ 销售策略💰 面向渠道与集成商销售，提供完整的功能文档和申请试用流程。 对外只提供付费的工程师售前服务，让下游集成商代理销售，提升知名度，寻求项目机会。 面向公司自己的客户，维护客情关系，做好售前售后。 主要目标在于提高公司/产品的知名度，对外我们向销售提供试用机会，面向校园我们也要扩大边缘团队规模，参加比赛，进行路演。 敏捷开发⚡️ MatriX RAG 一套产品提供后台，用户自由开发组件，作为MatriX RAG/力矩 LLM知识库发布。 一套产品后台界面仅对内开放，用于开发agent接入。 后续基于RAGFLOW开发。 Matrilx Falcon（⭐️） 资产管理平台 AI打标签 产品... ]]></description>
+    <pubDate>Mon, 18 Aug 2025 11:11:57 GMT</pubDate>
+  </item><item>
+    <title>20250311</title>
+    <link>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/20250311</link>
+    <guid>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/20250311</guid>
+    <description><![CDATA[ Matrix InferX 基本的发布版本可以更简陋一点 不需要做大的改动 销售端通过控制客户需求 尽量推迟全校发布的时间线 最低版本（优先）： 通过创建工作区切割学生与教师， 修改标题与Logo， 登录从邮箱登录改为学号/工号登录 非最高优先级功能： API使用限制， 划分模型权限， 超量自动切换， 更好的用户导入 探索性： 基础应用中心（Prompt+多模态）， Workflow编排， RAG调优（不同的RAG方案） SafeTunnel 最低版本： 硬件+软路由 软路由可以基于Openwrt/iStoreOS/OPNsense 如Openwrt本质上是系统 加密与隧道服务可以基于wire... ]]></description>
+    <pubDate>Mon, 18 Aug 2025 11:11:57 GMT</pubDate>
+  </item><item>
+    <title>Matrix InferX开发</title>
+    <link>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/Matrix-InferX%E5%BC%80%E5%8F%91</link>
+    <guid>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/Matrix-InferX%E5%BC%80%E5%8F%91</guid>
+    <description><![CDATA[ 路由鉴权 /tools /explore /datasets /datasets/ /plugins Docker 原服务源镜像新服务新镜像apilanggenius/dify-api:1.0.0matrilxmatrilxworkerlanggenius/dify-api:1.0.0matrilx-servermatrilx-serverweblanggenius/dify-web:1.0.0matrilx-webmatrilx-webdbpostgres:15-alpinematrilx-backendmatrilx-backendredisredis:6-alpinematrilx-ca... ]]></description>
+    <pubDate>Mon, 18 Aug 2025 11:11:57 GMT</pubDate>
+  </item><item>
+    <title>湖南交通职业技术学院</title>
+    <link>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/%E6%B9%96%E5%8D%97%E4%BA%A4%E9%80%9A%E8%81%8C%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%AD%A6%E9%99%A2</link>
+    <guid>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/%E6%B9%96%E5%8D%97%E4%BA%A4%E9%80%9A%E8%81%8C%E4%B8%9A%E6%8A%80%E6%9C%AF%E5%AD%A6%E9%99%A2</guid>
+    <description><![CDATA[ 湖南交通职业技术学院 知识库 分类数量规章制度13文档下载36教务通知271考试通知101新闻动态21. ]]></description>
+    <pubDate>Mon, 18 Aug 2025 11:11:57 GMT</pubDate>
+  </item><item>
+    <title>漏扫开发</title>
+    <link>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/%E6%BC%8F%E6%89%AB%E5%BC%80%E5%8F%91</link>
+    <guid>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/%E6%BC%8F%E6%89%AB%E5%BC%80%E5%8F%91</guid>
+    <description><![CDATA[ 漏扫开发 功能清单 漏洞管理 漏洞录入与导入（支持手动录入和自动导入） 漏洞分类与标签管理（CVE编号、CVSS评分、漏洞类型等） 漏洞关联资产 漏洞修复建议与参考方案 上传漏洞poc 查看漏洞关联资产 漏洞分页查询，条件查询 资产管理 资产录入与导入（一个ip为一个资产） 资产与漏洞相关联 web界面可向资产添加多个漏洞 web界面点击已修复则移除关联 资产分页查询，条件查询 用户管理 用户添加与导入 用户登录与注销 权限划分，管理员与普通用户 数据报表 资产风险热图 后台大屏显示 导出资产表 导出漏洞表 api设计 1. ]]></description>
+    <pubDate>Mon, 18 Aug 2025 11:11:57 GMT</pubDate>
+  </item><item>
+    <title>金融商业密码培训</title>
+    <link>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/%E9%87%91%E8%9E%8D%E5%95%86%E4%B8%9A%E5%AF%86%E7%A0%81%E5%9F%B9%E8%AE%AD</link>
+    <guid>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/%E9%87%91%E8%9E%8D%E5%95%86%E4%B8%9A%E5%AF%86%E7%A0%81%E5%9F%B9%E8%AE%AD</guid>
+    <description><![CDATA[ 金融商业密码培训 培训内容 主要参考链接： 培训内容密码重要性商用密码概述商用密码标准化发展商用密码典型应用场景商用密码应用中存在的问题商用密码应用问题原因分析密码应用安全性评估体系和国标解析商用密码安全性评估内容要求商用密码应用管理建议 参考资料 商用密码应用安全性评估进行讲解： www.sdprism.com/hyxw/302.html 金融行业密码应用安全解读：www.ninghebank.com/uploadfile/ueditor/file/202309/169570748522920b.pdf 密码基础知识：www.cnblogs.com/ffx1/p/17490195.html,... ]]></description>
+    <pubDate>Mon, 18 Aug 2025 11:11:57 GMT</pubDate>
+  </item><item>
+    <title>金融商业密码培训ppt讲稿</title>
+    <link>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/%E9%87%91%E8%9E%8D%E5%95%86%E4%B8%9A%E5%AF%86%E7%A0%81%E5%9F%B9%E8%AE%ADppt%E8%AE%B2%E7%A8%BF</link>
+    <guid>https://quartz.jzhao.xyz/%E9%A1%B9%E7%9B%AE/%E9%87%91%E8%9E%8D%E5%95%86%E4%B8%9A%E5%AF%86%E7%A0%81%E5%9F%B9%E8%AE%ADppt%E8%AE%B2%E7%A8%BF</guid>
+    <description><![CDATA[ 金融商业密码培训ppt讲稿 第一节 各位学员，大家好！今天我们来学习商用密码的相关知识。 首先，我们来明确一下本次学习的目标。通过本次学习，希望大家能理解商用密码的核心原理与行业应用，具备初步的密码技术选型与密钥管理能力，同时了解《密码法》等法规及国家监管机制，掌握密码合规管理的基本能力。其次掌握主流密码算法、密钥生命周期管理及 PKI 体系结构，提升技术理解能力。还有熟悉商用密码在实际场景中的部署方法与合规评估流程；同时认识商用密码当前面临的挑战与发展趋势。 现在我们看到本次课程的目录，共分为5个部分，商用密码概述，商用密码法律基础与监管政策，商用密码技术与基础知识，银行业典型应用场景与合规... ]]></description>
+    <pubDate>Mon, 18 Aug 2025 11:11:57 GMT</pubDate>
+  </item><item>
+    <title>流量分析</title>
+    <link>https://quartz.jzhao.xyz/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/Misc/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90</link>
+    <guid>https://quartz.jzhao.xyz/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/Misc/%E6%B5%81%E9%87%8F%E5%88%86%E6%9E%90</guid>
+    <description><![CDATA[ UsbKeyboardDataHacker 对于这种流量一般都在usbhid.data或usb.capdata中 项目地址：github.com/WangYihang/UsbKeyboardDataHacker 流量分析中专门用来提取USB键盘数据的工具 使用方法 python UsbKeyboardDataHacker.py --input tests/example.pcap 最后会在命令行输出键盘的结果 UsbKbCracker 对于这种流量一般都在usbhid.data或usb.capdata中 项目地址：github.com/P001water/UsbKbCracker 流量分析中专... ]]></description>
+    <pubDate>Mon, 18 Aug 2025 11:11:57 GMT</pubDate>
+  </item><item>
+    <title>零宽度字符隐写</title>
+    <link>https://quartz.jzhao.xyz/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/Misc/%E9%9B%B6%E5%AE%BD%E5%BA%A6%E5%AD%97%E7%AC%A6%E9%9A%90%E5%86%99</link>
+    <guid>https://quartz.jzhao.xyz/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/Misc/%E9%9B%B6%E5%AE%BD%E5%BA%A6%E5%AD%97%E7%AC%A6%E9%9A%90%E5%86%99</guid>
+    <description><![CDATA[ 零宽度字符隐写 将隐藏消息编码和解码为不可打印/可读字符。 常见的零宽度字符及它们的unicode码和原本用途： 零宽度空格符 (zero-width space) U+200B : 用于较长单词的换行分隔 零宽度连字符 (zero-width joiner) U+200D : 用于阿拉伯文与印度语系等文字中，使不会发生连字的字符间产生连字效果 零宽度断字符 (zero-width non-joiner) U+200C : 用于阿拉伯文，德文，印度语系等文字中，阻止会发生连字的字符间的连字效果 左至右符 (left-to-right mark) U+200E : 用于在混合文字方向的多种语言文... ]]></description>
+    <pubDate>Mon, 18 Aug 2025 11:11:57 GMT</pubDate>
+  </item><item>
+    <title>音频隐写</title>
+    <link>https://quartz.jzhao.xyz/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/Misc/%E9%9F%B3%E9%A2%91%E9%9A%90%E5%86%99</link>
+    <guid>https://quartz.jzhao.xyz/%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/Misc/%E9%9F%B3%E9%A2%91%E9%9A%90%E5%86%99</guid>
+    <description><![CDATA[ Audacity 用于查看音频的波形，频谱等信息，音频隐写第一步使用的工具。 下载地址：www.audacityteam.org/download/ RX-SSTV SSTV 慢扫描电视（Slow-scan television） 是业余无线电爱好者的一种主要图片传输方法，慢扫描电视通过无线电传输和接收单色或彩色静态图片。 慢扫描电视的一个术语名称是窄带电视。广播电视需要6MHz的带宽，因为帧速为25到30fps。慢扫描电视的带宽只有3kHz，因此慢扫描电视是一种慢得多的静态图像传输方法，通常每帧需要持续8秒或若干分钟。 业余无线电操作员通常在短波（或高频）、甚高频、超高频波段使用慢扫描电视。... ]]></description>
+    <pubDate>Mon, 18 Aug 2025 11:11:57 GMT</pubDate>
+  </item>
+    </channel>
+  </rss>
