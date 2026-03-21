@@ -10,61 +10,61 @@
     <link>https://coolcooltomato.github.io/CSharp/Avalonia/AvaloniaEdit-Binding</link>
     <guid>https://coolcooltomato.github.io/CSharp/Avalonia/AvaloniaEdit-Binding</guid>
     <description><![CDATA[ AvaloniaEdit 默认不支持Binding操作，因此需要自定义Behavior，将字符串与其.Document.Text绑定。 首先创建自定义Behavior： using System; using Avalonia; using Avalonia.Xaml.Interactivity; using AvaloniaEdit; namespace MatoEditor.Utils; public sealed class AvalonEditBehavior : Behavior&lt;TextEditor&gt; { private TextEditor _textEditor =... ]]></description>
-    <pubDate>Sat, 21 Mar 2026 09:31:24 GMT</pubDate>
+    <pubDate>Sat, 21 Mar 2026 09:52:15 GMT</pubDate>
   </item><item>
     <title>Fyne-Canvas</title>
     <link>https://coolcooltomato.github.io/Golang/Fyne/Fyne-Canvas</link>
     <guid>https://coolcooltomato.github.io/Golang/Fyne/Fyne-Canvas</guid>
     <description><![CDATA[ 包canvas包含构成Fyne GUI的所有基本CanvasObjects。 此包中实现的类型用作构建块，以构建更高阶的功能。通过设计，这些类型被设计为非交互式的。如果需要额外的功能，这通常意味着这种类型应该作为自定义小部件的一部分使用。 import &quot;fyne.io/fyne/v2/canvas&quot; Circle 圆 定义 type Circle struct { // 圆的左上角位置和右下角位置 Position1 fyne.Position Position2 fyne.Position // 是否可见 Hidden bool // 填充颜色和边框颜色 FillCol... ]]></description>
-    <pubDate>Sat, 21 Mar 2026 09:31:24 GMT</pubDate>
+    <pubDate>Sat, 21 Mar 2026 09:52:15 GMT</pubDate>
   </item><item>
     <title>Fyne-Container</title>
     <link>https://coolcooltomato.github.io/Golang/Fyne/Fyne-Container</link>
     <guid>https://coolcooltomato.github.io/Golang/Fyne/Fyne-Container</guid>
     <description><![CDATA[ 包container提供用于布局和组织应用程序的容器。 import &quot;fyne.io/fyne/v2/container&quot; 普通容器 获取Container实例 使用New函数获取一个新的Container实例，其中包含指定的CanvasObjects，这些对象将根据指定的Layout进行布局。 func New(layout fyne.Layout, objects ...fyne.CanvasObject) *fyne.Container 还可以使用封装后的函数返回指定布局的容器。 函数名作用NewGridWithColumns网格布局，指定列数NewGridWith... ]]></description>
-    <pubDate>Sat, 21 Mar 2026 09:31:24 GMT</pubDate>
+    <pubDate>Sat, 21 Mar 2026 09:52:15 GMT</pubDate>
   </item><item>
     <title>Fyne-Layout</title>
     <link>https://coolcooltomato.github.io/Golang/Fyne/Fyne-Layout</link>
     <guid>https://coolcooltomato.github.io/Golang/Fyne/Fyne-Layout</guid>
     <description><![CDATA[ 软件包layout定义了Fyne应用程序可用的各种布局。 import &quot;fyne.io/fyne/v2/layout&quot; 布局 函数名作用NewAdaptiveGridLayout网格布局，该布局在水平时使用列，而在垂直时使用行NewBorderLayout边缘布局，设置了上下左右的元素，容器中的其他元素将填满中心空间NewCenterLayout中心布局，元素居中显示NewFormLayout表单布局，容纳多个输入框以及对应标签，并从上到下依次排列NewGridLayout按指定列数排列的网格布局。行数将取决于使用此布局的容器中有多少子级NewGridLayoutWith... ]]></description>
-    <pubDate>Sat, 21 Mar 2026 09:31:24 GMT</pubDate>
+    <pubDate>Sat, 21 Mar 2026 09:52:15 GMT</pubDate>
   </item><item>
     <title>Fyne-Widget</title>
     <link>https://coolcooltomato.github.io/Golang/Fyne/Fyne-Widget</link>
     <guid>https://coolcooltomato.github.io/Golang/Fyne/Fyne-Widget</guid>
     <description><![CDATA[ 软件包widget定义了许多小部件 import &quot;fyne.io/fyne/v2/widget&quot; Accordion 下拉框 定义 type Accordion struct { BaseWidget // 项目 Items []*AccordionItem // 是否同时打开多个项目 MultiOpen bool } 示例 package main import ( &quot;fyne.io/fyne/v2/app&quot; &quot;fyne.io/fyne/v2/canvas&quot; &quot;fyne.io/fyne/v2/widget&quot; &... ]]></description>
-    <pubDate>Sat, 21 Mar 2026 09:31:24 GMT</pubDate>
+    <pubDate>Sat, 21 Mar 2026 09:52:15 GMT</pubDate>
   </item><item>
     <title>Gin模板语法</title>
     <link>https://coolcooltomato.github.io/Golang/Gin/Gin%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95</link>
     <guid>https://coolcooltomato.github.io/Golang/Gin/Gin%E6%A8%A1%E6%9D%BF%E8%AF%AD%E6%B3%95</guid>
     <description><![CDATA[ 模板命名 {{ define &quot;admin/index.html&quot; }} {{ end }} 模板引用 {{template &quot;admin/index.html&quot; .}} 模板变量 使用后台传入的变量 {{ .name }} {{ .content.title }} 定义变量 {{ $arg := .name }} {{ $arg }} 条件判断 {{ if .flag }} A {{ else if .flag }} B {{ else }} C {{ end }} 比较方法 使用方法： {{ if gt .arg1 arg2 }} {{ end }}... ]]></description>
-    <pubDate>Sat, 21 Mar 2026 09:31:24 GMT</pubDate>
+    <pubDate>Sat, 21 Mar 2026 09:52:15 GMT</pubDate>
   </item><item>
     <title>Gin路由与路由组</title>
     <link>https://coolcooltomato.github.io/Golang/Gin/Gin%E8%B7%AF%E7%94%B1%E4%B8%8E%E8%B7%AF%E7%94%B1%E7%BB%84</link>
     <guid>https://coolcooltomato.github.io/Golang/Gin/Gin%E8%B7%AF%E7%94%B1%E4%B8%8E%E8%B7%AF%E7%94%B1%E7%BB%84</guid>
     <description><![CDATA[ 路由 首先获取一个 gin.Default()对象，其中封装了实现若干请求类型的方法。 函数 请求类型函数GETfunc (group *RouterGroup) GET(relativePath string, handlers …HandlerFunc) IRoutesPOSTfunc (group *RouterGroup) POST(relativePath string, handlers …HandlerFunc) IRoutesPUTfunc (group *RouterGroup) PUT(relativePath string, handlers …HandlerFunc) ... ]]></description>
-    <pubDate>Sat, 21 Mar 2026 09:31:24 GMT</pubDate>
+    <pubDate>Sat, 21 Mar 2026 09:52:15 GMT</pubDate>
   </item><item>
     <title>Golang垃圾回收机制</title>
     <link>https://coolcooltomato.github.io/Golang/Go%E5%85%B6%E5%AE%83/Golang%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6</link>
     <guid>https://coolcooltomato.github.io/Golang/Go%E5%85%B6%E5%AE%83/Golang%E5%9E%83%E5%9C%BE%E5%9B%9E%E6%94%B6%E6%9C%BA%E5%88%B6</guid>
     <description><![CDATA[  Go1.3标记清除法 步骤 进行STW（stop the world即暂停程序业务逻辑），然后从main函数开始找到不可达的内存占用和可达的内存占用 开始标记，程序找出可达内存占用并做标记 标记结束，清除未标记的内存占用 结束STW，让程序继续运行，循环该过程直到main生命周期结束 优化 由于STW会影响程序的性能，因此将步骤3和步骤4的顺序调换，让步骤3的垃圾清除步骤与程序同时进行，能够减小STW的时长。 Go1.5三色标记法 三色定义 三色标记算法将程序中的对象分成白色、灰色，黑色三类： 白色对象表示暂无对象引用的潜在垃圾，其内存可能会被垃圾收集器回收 灰色对象表示白色到黑色的中间状态... ]]></description>
-    <pubDate>Sat, 21 Mar 2026 09:31:24 GMT</pubDate>
+    <pubDate>Sat, 21 Mar 2026 09:52:15 GMT</pubDate>
   </item><item>
     <title>Golang面试题</title>
     <link>https://coolcooltomato.github.io/Golang/Go%E5%85%B6%E5%AE%83/Golang%E9%9D%A2%E8%AF%95%E9%A2%98</link>
     <guid>https://coolcooltomato.github.io/Golang/Go%E5%85%B6%E5%AE%83/Golang%E9%9D%A2%E8%AF%95%E9%A2%98</guid>
     <description><![CDATA[ 使用指针的优势 节省内存，提高性能（减少数据复制带来的开销） 能够直接修改变量的值 用于构建链表和树等数据结构 优化内存管理管理（将指针设为nil，使对象可被垃圾回收） 值类型和引用类型 值类型直接储存值，内存通常在栈上分配 引用类型储存的是一个地址，内存通常在堆上分配，通过GC回收 指针和引用的区别 严格来说go没有引用类型，例如map 底层是一个指向 hmap 的指针，这就可以解释即使函数传参是按值传递，由于传递的是指针的拷贝，指针指向的底层 hmap 并没有改变，所以可以在函数内部改变 map 引用是变量的别名，通过引用可以直接操控变量本身（快捷方式） 指针储存一个内存地址 对象池 pe... ]]></description>
-    <pubDate>Sat, 21 Mar 2026 09:31:24 GMT</pubDate>
+    <pubDate>Sat, 21 Mar 2026 09:52:15 GMT</pubDate>
   </item><item>
     <title>Go实现Google Authenticator</title>
     <link>https://coolcooltomato.github.io/Golang/Go%E5%85%B6%E5%AE%83/Go%E5%AE%9E%E7%8E%B0Google-Authenticator</link>
     <guid>https://coolcooltomato.github.io/Golang/Go%E5%85%B6%E5%AE%83/Go%E5%AE%9E%E7%8E%B0Google-Authenticator</guid>
     <description><![CDATA[ 获取密钥 下面提供了一个将字符串转为16位大写字符串的函数，返回结果可作为Google验证器的密钥。 func StrTo16Upper(s string) string { var alphabet = []byte(&quot;ABCDEFGHIJKLMNOPQRSTUVWXYZ&quot;) hash := md5.Sum([]byte(s)) var result string for i := 0; i &lt; 16; i++ { index := int(hash[i]) % len(alphabet) result += string(alphabet[index]) } re... ]]></description>
-    <pubDate>Sat, 21 Mar 2026 09:31:24 GMT</pubDate>
+    <pubDate>Sat, 21 Mar 2026 09:52:15 GMT</pubDate>
   </item>
     </channel>
   </rss>
