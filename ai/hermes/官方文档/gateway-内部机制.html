@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh" dir="ltr"><head><title>Gateway 内部机制</title><meta charset="utf-8"/><link rel="preload" href="../../../index-47d9ba67.css" as="style"/><link rel="preload" href="../../../prescript-2bfc6315.js" as="script"/><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted Grotesk:wght@400;700&amp;family=Source Sans Pro:ital,wght@0,400;0,600;1,400;1,600&amp;family=IBM Plex Mono:wght@400;600&amp;display=swap"/><link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin="anonymous"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><meta name="og:site_name" content="CoolCoolTomato"/><meta property="og:title" content="Gateway 内部机制"/><meta property="og:type" content="website"/><meta name="twitter:card" content="summary_large_image"/><meta name="twitter:title" content="Gateway 内部机制"/><meta name="twitter:description" content="Gateway 内部机制 消息 gateway 是一个长期运行的进程，通过统一架构将 Hermes 连接到 20 余个外部消息平台。 关键文件 文件用途gateway/run.pyGatewayRunner — 主循环、斜杠命令、消息分发（大文件；请查看 git 获取当前行数）gateway/session.pySessionStore — 会话持久化与会话键构造gateway/delivery.py向目标平台/频道投递出站消息gateway/pairing.py用于用户授权的 DM 配对流程gateway/channel_directory.py将聊天 ID 映射为可读名称，用于 cron ..."/><meta property="og:description" content="Gateway 内部机制 消息 gateway 是一个长期运行的进程，通过统一架构将 Hermes 连接到 20 余个外部消息平台。 关键文件 文件用途gateway/run.pyGatewayRunner — 主循环、斜杠命令、消息分发（大文件；请查看 git 获取当前行数）gateway/session.pySessionStore — 会话持久化与会话键构造gateway/delivery.py向目标平台/频道投递出站消息gateway/pairing.py用于用户授权的 DM 配对流程gateway/channel_directory.py将聊天 ID 映射为可读名称，用于 cron ..."/><meta property="og:image:alt" content="Gateway 内部机制 消息 gateway 是一个长期运行的进程，通过统一架构将 Hermes 连接到 20 余个外部消息平台。 关键文件 文件用途gateway/run.pyGatewayRunner — 主循环、斜杠命令、消息分发（大文件；请查看 git 获取当前行数）gateway/session.pySessionStore — 会话持久化与会话键构造gateway/delivery.py向目标平台/频道投递出站消息gateway/pairing.py用于用户授权的 DM 配对流程gateway/channel_directory.py将聊天 ID 映射为可读名称，用于 cron ..."/><meta property="twitter:domain" content="coolcooltomato.github.io"/><meta property="og:url" content="https://coolcooltomato.github.io/ai/hermes/官方文档/gateway-内部机制"/><meta property="twitter:url" content="https://coolcooltomato.github.io/ai/hermes/官方文档/gateway-内部机制"/><link rel="icon" href="../../../static/icon.png"/><meta name="description" content="Gateway 内部机制 消息 gateway 是一个长期运行的进程，通过统一架构将 Hermes 连接到 20 余个外部消息平台。 关键文件 文件用途gateway/run.pyGatewayRunner — 主循环、斜杠命令、消息分发（大文件；请查看 git 获取当前行数）gateway/session.pySessionStore — 会话持久化与会话键构造gateway/delivery.py向目标平台/频道投递出站消息gateway/pairing.py用于用户授权的 DM 配对流程gateway/channel_directory.py将聊天 ID 映射为可读名称，用于 cron ..."/><meta name="generator" content="Quartz"/><link href="../../../index-47d9ba67.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-735924e0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-589c1cea.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-bbc3f7c0.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-2911f5d1.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-e427079e.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-53b25b2b.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-c93c6a44.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-8a06014f.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-77d6a441.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-6ee21cee.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-1ea6ad18.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-34bdfded.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-788c9ca3.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-642859cd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-4abc06bd.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-274a3dfe.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-94cb6c84.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-58d5ff56.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../component-7262b5a7.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-a5c806d2.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-6bd36952.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-9857b007.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="../../../static/resource-style-d3a1a224.css" rel="stylesheet" type="text/css" data-persist="true"/><link href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" rel="stylesheet" type="text/css" data-persist="true"/><script src="../../../prescript-2bfc6315.js" type="application/javascript" data-persist="true"></script><script type="application/javascript" data-persist="true">const fetchData = fetch("../../../static/contentIndex.json").then(data => data.json())</script><link rel="preconnect" href="https://fonts.googleapis.com"/><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous"/><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Schibsted%20Grotesk%3Awght%40400%3B700&amp;family=Source%20Sans%20Pro%3Aital%2Cwght%400%2C400%3B0%2C600%3B1%2C400%3B1%2C600&amp;family=IBM%20Plex%20Mono%3Awght%40400%3B600&amp;display=swap"/><meta property="og:image:width" content="1200"/><meta property="og:image:height" content="630"/><meta property="og:image" content="https://coolcooltomato.github.io/ai/hermes/官方文档/gateway-内部机制-og-image.webp"/><meta property="og:image:url" content="https://coolcooltomato.github.io/ai/hermes/官方文档/gateway-内部机制-og-image.webp"/><meta name="twitter:image" content="https://coolcooltomato.github.io/ai/hermes/官方文档/gateway-内部机制-og-image.webp"/><meta property="og:image:type" content="image/webp"/></head><body data-slug="ai/hermes/官方文档/gateway-内部机制" data-basepath><div id="quartz-root" class="page" data-frame="default"><div id="quartz-body"><div class="left sidebar"><h2 class="page-title"><a href="../../..">CoolCoolTomato</a></h2><div class="mobile-only"><div class="spacer"></div></div><div class="flex-component" style="flex-direction: row; flex-wrap: nowrap; gap: 0.5rem;"><div style="flex-grow: 1; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><div class="search"><button class="search-button" aria-label="搜索" aria-expanded="false"><svg role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 19.9 19.7"><title>Search</title><g class="search-path" fill="none"><path stroke-linecap="square" d="M18.5 18.3l-5.4-5.4"></path><circle cx="8" cy="8" r="7"></circle></g></svg><p>搜索</p></button><div class="search-container"><div class="search-space"><input autocomplete="off" class="search-bar" name="search" type="text" aria-label="搜索内容..." placeholder="搜索内容..."/><div class="search-layout" data-preview="true" data-field-priority="[&quot;title&quot;,&quot;content&quot;,&quot;tags&quot;]"></div></div></div></div></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="darkmode" aria-label="暗色模式"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="dayIcon" x="0px" y="0px" viewBox="0 0 35 35" style="enable-background:new 0 0 35 35" xml:space="preserve" aria-label="暗色模式"><title>暗色模式</title><path d="M6,17.5C6,16.672,5.328,16,4.5,16h-3C0.672,16,0,16.672,0,17.5    S0.672,19,1.5,19h3C5.328,19,6,18.328,6,17.5z M7.5,26c-0.414,0-0.789,0.168-1.061,0.439l-2,2C4.168,28.711,4,29.086,4,29.5    C4,30.328,4.671,31,5.5,31c0.414,0,0.789-0.168,1.06-0.44l2-2C8.832,28.289,9,27.914,9,27.5C9,26.672,8.329,26,7.5,26z M17.5,6    C18.329,6,19,5.328,19,4.5v-3C19,0.672,18.329,0,17.5,0S16,0.672,16,1.5v3C16,5.328,16.671,6,17.5,6z M27.5,9    c0.414,0,0.789-0.168,1.06-0.439l2-2C30.832,6.289,31,5.914,31,5.5C31,4.672,30.329,4,29.5,4c-0.414,0-0.789,0.168-1.061,0.44    l-2,2C26.168,6.711,26,7.086,26,7.5C26,8.328,26.671,9,27.5,9z M6.439,8.561C6.711,8.832,7.086,9,7.5,9C8.328,9,9,8.328,9,7.5    c0-0.414-0.168-0.789-0.439-1.061l-2-2C6.289,4.168,5.914,4,5.5,4C4.672,4,4,4.672,4,5.5c0,0.414,0.168,0.789,0.439,1.06    L6.439,8.561z M33.5,16h-3c-0.828,0-1.5,0.672-1.5,1.5s0.672,1.5,1.5,1.5h3c0.828,0,1.5-0.672,1.5-1.5S34.328,16,33.5,16z     M28.561,26.439C28.289,26.168,27.914,26,27.5,26c-0.828,0-1.5,0.672-1.5,1.5c0,0.414,0.168,0.789,0.439,1.06l2,2    C28.711,30.832,29.086,31,29.5,31c0.828,0,1.5-0.672,1.5-1.5c0-0.414-0.168-0.789-0.439-1.061L28.561,26.439z M17.5,29    c-0.829,0-1.5,0.672-1.5,1.5v3c0,0.828,0.671,1.5,1.5,1.5s1.5-0.672,1.5-1.5v-3C19,29.672,18.329,29,17.5,29z M17.5,7    C11.71,7,7,11.71,7,17.5S11.71,28,17.5,28S28,23.29,28,17.5S23.29,7,17.5,7z M17.5,25c-4.136,0-7.5-3.364-7.5-7.5    c0-4.136,3.364-7.5,7.5-7.5c4.136,0,7.5,3.364,7.5,7.5C25,21.636,21.636,25,17.5,25z"></path></svg><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="nightIcon" x="0px" y="0px" viewBox="0 0 100 100" style="enable-background:new 0 0 100 100" xml:space="preserve" aria-label="亮色模式"><title>亮色模式</title><path d="M96.76,66.458c-0.853-0.852-2.15-1.064-3.23-0.534c-6.063,2.991-12.858,4.571-19.655,4.571  C62.022,70.495,50.88,65.88,42.5,57.5C29.043,44.043,25.658,23.536,34.076,6.47c0.532-1.08,0.318-2.379-0.534-3.23  c-0.851-0.852-2.15-1.064-3.23-0.534c-4.918,2.427-9.375,5.619-13.246,9.491c-9.447,9.447-14.65,22.008-14.65,35.369  c0,13.36,5.203,25.921,14.65,35.368s22.008,14.65,35.368,14.65c13.361,0,25.921-5.203,35.369-14.65  c3.872-3.871,7.064-8.328,9.491-13.246C97.826,68.608,97.611,67.309,96.76,66.458z"></path></svg></button></div><div style="flex-grow: 0; flex-shrink: 1; flex-basis: auto; order: 0; align-self: center; justify-self: center;"><button class="readermode" aria-label="阅读模式"><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" class="readerIcon" fill="currentColor" stroke="currentColor" stroke-width="0.2" stroke-linecap="round" stroke-linejoin="round" width="64px" height="64px" viewBox="0 0 24 24" aria-label="阅读模式"><title>阅读模式</title><g transform="translate(-1.8, -1.8) scale(1.15, 1.2)"><path d="M8.9891247,2.5 C10.1384702,2.5 11.2209868,2.96705384 12.0049645,3.76669482 C12.7883914,2.96705384 13.8709081,2.5 15.0202536,2.5 L18.7549359,2.5 C19.1691495,2.5 19.5049359,2.83578644 19.5049359,3.25 L19.5046891,4.004 L21.2546891,4.00457396 C21.6343849,4.00457396 21.9481801,4.28672784 21.9978425,4.6528034 L22.0046891,4.75457396 L22.0046891,20.25 C22.0046891,20.6296958 21.7225353,20.943491 21.3564597,20.9931534 L21.2546891,21 L2.75468914,21 C2.37499337,21 2.06119817,20.7178461 2.01153575,20.3517706 L2.00468914,20.25 L2.00468914,4.75457396 C2.00468914,4.37487819 2.28684302,4.061083 2.65291858,4.01142057 L2.75468914,4.00457396 L4.50368914,4.004 L4.50444233,3.25 C4.50444233,2.87030423 4.78659621,2.55650904 5.15267177,2.50684662 L5.25444233,2.5 L8.9891247,2.5 Z M4.50368914,5.504 L3.50468914,5.504 L3.50468914,19.5 L10.9478955,19.4998273 C10.4513189,18.9207296 9.73864328,18.5588115 8.96709342,18.5065584 L8.77307039,18.5 L5.25444233,18.5 C4.87474657,18.5 4.56095137,18.2178461 4.51128895,17.8517706 L4.50444233,17.75 L4.50368914,5.504 Z M19.5049359,17.75 C19.5049359,18.1642136 19.1691495,18.5 18.7549359,18.5 L15.2363079,18.5 C14.3910149,18.5 13.5994408,18.8724714 13.0614828,19.4998273 L20.5046891,19.5 L20.5046891,5.504 L19.5046891,5.504 L19.5049359,17.75 Z M18.0059359,3.999 L15.0202536,4 L14.8259077,4.00692283 C13.9889509,4.06666544 13.2254227,4.50975805 12.7549359,5.212 L12.7549359,17.777 L12.7782651,17.7601316 C13.4923805,17.2719483 14.3447024,17 15.2363079,17 L18.0059359,16.999 L18.0056891,4.798 L18.0033792,4.75457396 L18.0056891,4.71 L18.0059359,3.999 Z M8.9891247,4 L6.00368914,3.999 L6.00599909,4.75457396 L6.00599909,4.75457396 L6.00368914,4.783 L6.00368914,16.999 L8.77307039,17 C9.57551536,17 10.3461406,17.2202781 11.0128313,17.6202194 L11.2536891,17.776 L11.2536891,5.211 C10.8200889,4.56369974 10.1361548,4.13636104 9.37521067,4.02745763 L9.18347055,4.00692283 L8.9891247,4 Z"></path></g></svg></button></div></div><div class="explorer nav-files-container" data-behavior="link" data-collapsed="collapsed" data-savestate="true" data-data-fns="{&quot;order&quot;:[&quot;filter&quot;,&quot;map&quot;,&quot;sort&quot;],&quot;sortFn&quot;:&quot;(a2, b2) => {\n    if (!a2.isFolder &amp;&amp; !b2.isFolder || a2.isFolder &amp;&amp; b2.isFolder) {\n      return (a2.displayName || \&quot;\&quot;).localeCompare(b2.displayName || \&quot;\&quot;, void 0, {\n        numeric: true,\n        sensitivity: \&quot;base\&quot;\n      });\n    }\n    if (!a2.isFolder &amp;&amp; b2.isFolder) {\n      return 1;\n    }\n    return -1;\n  }&quot;,&quot;filterFn&quot;:&quot;(node) => node.slugSegment !== \&quot;tags\&quot;&quot;,&quot;mapFn&quot;:&quot;(node) => {\n    return node;\n  }&quot;}"><button type="button" class="explorer-toggle mobile-explorer hide-until-loaded" data-mobile="true" aria-controls="explorer-1" aria-label="探索"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide-menu"><line x1="4" x2="20" y1="12" y2="12"></line><line x1="4" x2="20" y1="6" y2="6"></line><line x1="4" x2="20" y1="18" y2="18"></line></svg></button><button type="button" class="title-button explorer-toggle desktop-explorer" data-mobile="false" aria-expanded="true"><h2>探索</h2><svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><div id="explorer-1" class="explorer-content" aria-expanded="false" role="group"><ul class="explorer-ul overflow" id="list-0"><li class="overflow-end"></li></ul></div><template id="template-file"><li><a href="#" class="nav-file-title tree-item-self"></a></li></template><template id="template-folder"><li><div class="folder-container nav-folder-title tree-item-self"><svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="5 8 14 8" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="folder-icon nav-folder-collapse-indicator collapse-icon"><polyline points="6 9 12 15 18 9"></polyline></svg><div><button class="folder-button"><span class="folder-title"></span></button></div></div><div class="folder-outer"><ul class="content tree-item-children"></ul></div></li></template></div></div><div class="center"><div class="page-header"><div class="popover-hint"><nav class="breadcrumb-container" aria-label="breadcrumbs"><div class="breadcrumb-element"><a href="../../../">Home</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../ai/">AI</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../ai/hermes/">Hermes</a><p> ❯ </p></div><div class="breadcrumb-element"><a href="../../../ai/hermes/官方文档/">官方文档</a><p> ❯ </p></div><div class="breadcrumb-element"><a href>Gateway 内部机制</a></div></nav><h1 class="article-title">Gateway 内部机制</h1><p show-comma="true" class="content-meta"><time datetime="2026-06-13T15:37:18.000Z">2026年6月13日</time><span>11分钟阅读</span></p></div></div><article class="popover-hint"><div class="markdown-preview-view markdown-rendered"><h1 id="gateway-内部机制">Gateway 内部机制<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gateway-内部机制" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h1>
+<p>消息 gateway 是一个长期运行的进程，通过统一架构将 Hermes 连接到 20 余个外部消息平台。</p>
+<h2 id="关键文件">关键文件<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#关键文件" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>文件</th><th>用途</th></tr></thead><tbody><tr><td><code>gateway/run.py</code></td><td><code>GatewayRunner</code> — 主循环、斜杠命令、消息分发（大文件；请查看 git 获取当前行数）</td></tr><tr><td><code>gateway/session.py</code></td><td><code>SessionStore</code> — 会话持久化与会话键构造</td></tr><tr><td><code>gateway/delivery.py</code></td><td>向目标平台/频道投递出站消息</td></tr><tr><td><code>gateway/pairing.py</code></td><td>用于用户授权的 DM 配对流程</td></tr><tr><td><code>gateway/channel_directory.py</code></td><td>将聊天 ID 映射为可读名称，用于 cron 投递</td></tr><tr><td><code>gateway/hooks.py</code></td><td>Hook（钩子）发现、加载与生命周期事件分发</td></tr><tr><td><code>gateway/mirror.py</code></td><td>为 <code>send_message</code> 提供跨会话消息镜像</td></tr><tr><td><code>gateway/status.py</code></td><td>面向 profile 范围的 gateway 实例的 token 锁管理</td></tr><tr><td><code>gateway/builtin_hooks/</code></td><td>始终注册的 hook 扩展点（当前未内置任何 hook）</td></tr><tr><td><code>gateway/platforms/</code></td><td>平台适配器（每个消息平台一个）</td></tr></tbody></table></div>
+<h2 id="架构概览">架构概览<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#架构概览" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>┌─────────────────────────────────────────────────┐</span></span>
+<span data-line><span>│                  GatewayRunner                  │</span></span>
+<span data-line><span>│                                                 │</span></span>
+<span data-line><span>│  ┌──────────┐  ┌──────────┐  ┌──────────┐       │</span></span>
+<span data-line><span>│  │ Telegram │  │ Discord  │  │  Slack   │       │</span></span>
+<span data-line><span>│  │ Adapter  │  │ Adapter  │  │ Adapter  │       │</span></span>
+<span data-line><span>│  └────┬─────┘  └────┬─────┘  └────┬─────┘       │</span></span>
+<span data-line><span>│       │             │             │             │</span></span>
+<span data-line><span>│       └─────────────┼─────────────┘             │</span></span>
+<span data-line><span>│                     ▼                           │</span></span>
+<span data-line><span>│              _handle_message()                  │</span></span>
+<span data-line><span>│                     │                           │</span></span>
+<span data-line><span>│         ┌───────────┼───────────┐               │</span></span>
+<span data-line><span>│         ▼           ▼           ▼               │</span></span>
+<span data-line><span>│  Slash command   AIAgent    Queue/BG            │</span></span>
+<span data-line><span>│    dispatch      creation   sessions            │</span></span>
+<span data-line><span>│                     │                           │</span></span>
+<span data-line><span>│                     ▼                           │</span></span>
+<span data-line><span>│                 SessionStore                    │</span></span>
+<span data-line><span>│              (SQLite persistence)               │</span></span>
+<span data-line><span>└───────┴─────────────┴─────────────┴─────────────┘</span></span></code></pre></figure>
+<h2 id="消息流程">消息流程<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#消息流程" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>当消息从任意平台到达时：</p>
+<ol>
+<li><strong>平台适配器</strong>接收原始事件，将其规范化为 <code>MessageEvent</code></li>
+<li><strong>基础适配器</strong>检查活跃会话守卫：
+<ul>
+<li>若该会话的 agent 正在运行 → 将消息加入队列，设置中断事件</li>
+<li>若为 <code>/approve</code>、<code>/deny</code>、<code>/stop</code> → 绕过守卫（内联分发）</li>
+</ul>
+</li>
+<li><strong>GatewayRunner._handle_message()</strong> 接收事件：
+<ul>
+<li>通过 <code>_session_key_for_source()</code> 解析会话键（格式：<code>agent:main:{platform}:{chat_type}:{chat_id}</code>）</li>
+<li>检查授权（见下方授权章节）</li>
+<li>检查是否为斜杠命令 → 分发至命令处理器</li>
+<li>检查 agent 是否已在运行 → 拦截 <code>/stop</code>、<code>/status</code> 等命令</li>
+<li>否则 → 创建 <code>AIAgent</code> 实例并运行对话</li>
+</ul>
+</li>
+<li><strong>响应</strong>通过平台适配器回传</li>
+</ol>
+<h3 id="会话键格式">会话键格式<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#会话键格式" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>会话键编码了完整的路由上下文：</p>
+<pre><code>agent:main:{platform}:{chat_type}:{chat_id}
+</code></pre>
+<p>示例：<code>agent:main:telegram:private:123456789</code></p>
+<p>支持线程的平台（Telegram 论坛话题、Discord 线程、Slack 线程）可能在 chat_id 部分包含线程 ID。<strong>切勿手动构造会话键</strong> — 请始终使用 <code>gateway/session.py</code> 中的 <code>build_session_key()</code>。</p>
+<h3 id="两级消息守卫">两级消息守卫<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#两级消息守卫" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>当 agent 正在运行时，传入消息会依次经过两级守卫：</p>
+<ol>
+<li>
+<p><strong>第一级 — 基础适配器</strong>（<code>gateway/platforms/base.py</code>）：检查 <code>_active_sessions</code>。若会话处于活跃状态，将消息加入 <code>_pending_messages</code> 队列并设置中断事件。此级在消息到达 gateway runner <em>之前</em>进行拦截。</p>
+</li>
+<li>
+<p><strong>第二级 — Gateway runner</strong>（<code>gateway/run.py</code>）：检查 <code>_running_agents</code>。拦截特定命令（<code>/stop</code>、<code>/new</code>、<code>/queue</code>、<code>/status</code>、<code>/approve</code>、<code>/deny</code>）并进行相应路由。其余所有消息触发 <code>running_agent.interrupt()</code>。</p>
+</li>
+</ol>
+<p>必须在 agent 被阻塞时到达 runner 的命令（如 <code>/approve</code>）通过 <code>await self._message_handler(event)</code> <strong>内联</strong>分发 — 绕过后台任务系统以避免竞态条件。</p>
+<h2 id="授权">授权<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#授权" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Gateway 使用多层授权检查，按顺序评估：</p>
+<ol>
+<li><strong>平台级全量放行标志</strong>（如 <code>TELEGRAM_ALLOW_ALL_USERS</code>）— 若设置，该平台所有用户均被授权</li>
+<li><strong>平台白名单</strong>（如 <code>TELEGRAM_ALLOWED_USERS</code>）— 逗号分隔的用户 ID</li>
+<li><strong>DM 配对</strong> — 已认证用户可通过配对码为新用户授权</li>
+<li><strong>全局放行标志</strong>（<code>GATEWAY_ALLOW_ALL_USERS</code>）— 若设置，所有平台的所有用户均被授权</li>
+<li><strong>默认：拒绝</strong> — 未授权用户被拒绝</li>
+</ol>
+<h3 id="dm-配对流程">DM 配对流程<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#dm-配对流程" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>Admin: /pair</span></span>
+<span data-line><span>Gateway: &quot;Pairing code: ABC123. Share with the user.&quot;</span></span>
+<span data-line><span>New user: ABC123</span></span>
+<span data-line><span>Gateway: &quot;Paired! You're now authorized.&quot;</span></span></code></pre></figure>
+<p>配对状态持久化于 <code>gateway/pairing.py</code>，重启后仍然有效。</p>
+<h2 id="斜杠命令分发">斜杠命令分发<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#斜杠命令分发" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Gateway 中所有斜杠命令均经过相同的解析流程：</p>
+<ol>
+<li><code>hermes_cli/commands.py</code> 中的 <code>resolve_command()</code> 将输入映射为规范名称（处理别名、前缀匹配）</li>
+<li>规范名称与 <code>GATEWAY_KNOWN_COMMANDS</code> 进行比对</li>
+<li><code>_handle_message()</code> 中的处理器根据规范名称进行分发</li>
+<li>部分命令受配置门控（<code>CommandDef</code> 上的 <code>gateway_config_gate</code>）</li>
+</ol>
+<h3 id="运行中-agent-守卫">运行中 Agent 守卫<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#运行中-agent-守卫" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>在 agent 处理消息期间不得执行的命令会被提前拒绝：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="python" data-theme="github-light github-dark"><code data-language="python" data-theme="github-light github-dark" style="display:grid;"><span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> _quick_key </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">in</span><span style="--shiki-light:#005CC5;--shiki-dark:#79B8FF;" data-token-type="value"> self</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">._running_agents:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">    if</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;"> canonical </span><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="operator">==</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;model&quot;</span><span style="--shiki-light:#24292E;--shiki-dark:#E1E4E8;" data-token-type="punctuation">:</span></span>
+<span data-line><span style="--shiki-light:#D73A49;--shiki-dark:#F97583;" data-token-type="keyword">        return</span><span style="--shiki-light:#032F62;--shiki-dark:#9ECBFF;" data-token-type="string"> &quot;⏳ Agent is running — wait for it to finish or /stop first.&quot;</span></span></code></pre></figure>
+<p>绕过命令（<code>/stop</code>、<code>/new</code>、<code>/approve</code>、<code>/deny</code>、<code>/queue</code>、<code>/status</code>）具有特殊处理逻辑。</p>
+<h2 id="配置来源">配置来源<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#配置来源" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Gateway 从多个来源读取配置：</p>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>来源</th><th>提供内容</th></tr></thead><tbody><tr><td><code>~/.hermes/.env</code></td><td>API 密钥、bot token、平台凭据</td></tr><tr><td><code>~/.hermes/config.yaml</code></td><td>模型设置、工具配置、显示选项</td></tr><tr><td>环境变量</td><td>覆盖上述任意配置</td></tr></tbody></table></div>
+<p>与 CLI（使用带硬编码默认值的 <code>load_cli_config()</code>）不同，gateway 通过 YAML 加载器直接读取 <code>config.yaml</code>。这意味着存在于 CLI 默认值字典但不在用户配置文件中的配置键，在 CLI 和 gateway 之间可能表现不同。</p>
+<h2 id="平台适配器">平台适配器<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#平台适配器" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>每个消息平台在 <code>gateway/platforms/</code> 下均有对应适配器：</p>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>gateway/platforms/</span></span>
+<span data-line><span>├── base.py              # BaseAdapter — 所有平台的共享逻辑</span></span>
+<span data-line><span>├── telegram.py          # Telegram Bot API（长轮询或 webhook）</span></span>
+<span data-line><span>├── discord.py           # Discord bot（通过 discord.py）</span></span>
+<span data-line><span>├── slack.py             # Slack Socket Mode</span></span>
+<span data-line><span>├── whatsapp.py          # WhatsApp Business Cloud API</span></span>
+<span data-line><span>├── signal.py            # Signal（通过 signal-cli REST API）</span></span>
+<span data-line><span>├── matrix.py            # Matrix（通过 mautrix，可选 E2EE）</span></span>
+<span data-line><span>├── mattermost.py        # Mattermost WebSocket API</span></span>
+<span data-line><span>├── email.py             # 电子邮件（通过 IMAP/SMTP）</span></span>
+<span data-line><span>├── sms.py               # 短信（通过 Twilio）</span></span>
+<span data-line><span>├── dingtalk.py          # 钉钉 WebSocket</span></span>
+<span data-line><span>├── feishu.py            # 飞书/Lark WebSocket 或 webhook</span></span>
+<span data-line><span>├── wecom.py             # 企业微信（WeCom）回调</span></span>
+<span data-line><span>├── weixin.py            # 微信（个人版，通过 iLink Bot API）</span></span>
+<span data-line><span>├── bluebubbles.py       # Apple iMessage（通过 BlueBubbles macOS 服务端）</span></span>
+<span data-line><span>├── qqbot/               # QQ Bot（腾讯 QQ，通过官方 API v2，子包：adapter.py、crypto.py、keyboards.py 等）</span></span>
+<span data-line><span>├── yuanbao.py           # 元宝（腾讯）私信/群组适配器</span></span>
+<span data-line><span>├── feishu_comment.py    # 飞书文档/云盘评论回复处理器</span></span>
+<span data-line><span>├── msgraph_webhook.py   # Microsoft Graph 变更通知 webhook（Teams、Outlook 等）</span></span>
+<span data-line><span>├── webhook.py           # 入站/出站 webhook 适配器</span></span>
+<span data-line><span>├── api_server.py        # REST API 服务器适配器</span></span>
+<span data-line><span>└── homeassistant.py     # Home Assistant 对话集成</span></span></code></pre></figure>
+<p>适配器实现统一接口：</p>
+<ul>
+<li><code>connect()</code> / <code>disconnect()</code> — 生命周期管理</li>
+<li><code>send_message()</code> — 出站消息投递</li>
+<li><code>on_message()</code> — 入站消息规范化 → <code>MessageEvent</code></li>
+</ul>
+<h3 id="token-锁">Token 锁<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#token-锁" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>使用唯一凭据连接的适配器在 <code>connect()</code> 中调用 <code>acquire_scoped_lock()</code>，在 <code>disconnect()</code> 中调用 <code>release_scoped_lock()</code>。这可防止两个 profile 同时使用同一 bot token。</p>
+<h2 id="投递路径">投递路径<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#投递路径" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>出站投递（<code>gateway/delivery.py</code>）处理以下场景：</p>
+<ul>
+<li><strong>直接回复</strong> — 将响应发回原始聊天</li>
+<li><strong>主频道投递</strong> — 将 cron 任务输出和后台结果路由至已配置的主频道</li>
+<li><strong>显式目标投递</strong> — <code>send_message</code> 工具指定 <code>telegram:-1001234567890</code>，或通过 <a href="../../../guides/pipe-script-output" class="internal internal-link" data-slug="guides/pipe-script-output"><code>hermes send</code> CLI</a> 封装同一工具供 shell 脚本使用</li>
+<li><strong>跨平台投递</strong> — 投递至与原始消息不同的平台</li>
+</ul>
+<p>Cron 任务投递<strong>不会</strong>镜像到 gateway 会话历史中 — 它们仅存在于各自的 cron 会话中。这是有意为之的设计选择，以避免消息交替违规。</p>
+<h2 id="hooks">Hooks<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#hooks" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Gateway hook 是响应生命周期事件的 Python 模块。</p>
+<h3 id="gateway-hook-事件">Gateway Hook 事件<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#gateway-hook-事件" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div class="table-container"><table><thead><tr><th>事件</th><th>触发时机</th></tr></thead><tbody><tr><td><code>gateway:startup</code></td><td>Gateway 进程启动时</td></tr><tr><td><code>session:start</code></td><td>新对话会话开始时</td></tr><tr><td><code>session:end</code></td><td>会话完成或超时时</td></tr><tr><td><code>session:reset</code></td><td>用户通过 <code>/new</code> 重置会话时</td></tr><tr><td><code>agent:start</code></td><td>Agent 开始处理消息时</td></tr><tr><td><code>agent:step</code></td><td>Agent 完成一次工具调用迭代时</td></tr><tr><td><code>agent:end</code></td><td>Agent 完成并返回响应时</td></tr><tr><td><code>command:*</code></td><td>任意斜杠命令被执行时</td></tr></tbody></table></div>
+<p>Hook 从 <code>gateway/builtin_hooks/</code>（扩展点 — 当前发行版中为空；<code>_register_builtin_hooks()</code> 是一个空操作存根）和 <code>~/.hermes/hooks/</code>（用户安装）中发现。每个 hook 是一个包含 <code>HOOK.yaml</code> 清单和 <code>handler.py</code> 的目录。</p>
+<h2 id="内存提供者集成">内存提供者集成<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#内存提供者集成" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>当内存提供者插件（如 Honcho）启用时：</p>
+<ol>
+<li>Gateway 为每条消息创建一个带会话 ID 的 <code>AIAgent</code></li>
+<li><code>MemoryManager</code> 使用会话上下文初始化提供者</li>
+<li>提供者工具（如 <code>honcho_profile</code>、<code>viking_search</code>）通过以下路径路由：</li>
+</ol>
+<figure data-rehype-pretty-code-figure><pre tabindex="0" data-language="text" data-theme="github-light github-dark"><code data-language="text" data-theme="github-light github-dark" style="display:grid;"><span data-line><span>AIAgent._invoke_tool()</span></span>
+<span data-line><span>  → self._memory_manager.handle_tool_call(name, args)</span></span>
+<span data-line><span>    → provider.handle_tool_call(name, args)</span></span></code></pre></figure>
+<ol start="4">
+<li>会话结束/重置时，<code>on_session_end()</code> 触发以进行清理和最终数据刷写</li>
+</ol>
+<h3 id="内存刷写生命周期">内存刷写生命周期<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#内存刷写生命周期" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h3>
+<p>当会话被重置、恢复或过期时：</p>
+<ol>
+<li>内置内存刷写至磁盘</li>
+<li>内存提供者的 <code>on_session_end()</code> hook 触发</li>
+<li>临时 <code>AIAgent</code> 运行仅含内存的对话轮次</li>
+<li>上下文随后被丢弃或归档</li>
+</ol>
+<h2 id="后台维护">后台维护<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#后台维护" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Gateway 在处理消息的同时运行周期性维护任务：</p>
+<ul>
+<li><strong>Cron 计时</strong> — 检查任务计划并触发到期任务</li>
+<li><strong>会话过期</strong> — 超时后清理废弃会话</li>
+<li><strong>内存刷写</strong> — 在会话过期前主动刷写内存</li>
+<li><strong>缓存刷新</strong> — 刷新模型列表和提供者状态</li>
+</ul>
+<h2 id="进程管理">进程管理<a role="anchor" aria-hidden="true" tabindex="-1" data-no-popover="true" href="#进程管理" class="internal internal-link"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"></path><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"></path></svg></a></h2>
+<p>Gateway 作为长期运行进程运行，管理方式如下：</p>
+<ul>
+<li><code>hermes gateway start</code> / <code>hermes gateway stop</code> — 手动控制</li>
+<li><code>systemctl</code>（Linux）或 <code>launchctl</code>（macOS）— 服务管理</li>
+<li>PID 文件位于 <code>~/.hermes/gateway.pid</code> — 面向 profile 的进程追踪</li>
+</ul>
+<p><strong>Profile 范围 vs 全局</strong>：<code>start_gateway()</code> 使用 profile 范围的 PID 文件。<code>hermes gateway stop</code> 仅停止当前 profile 的 gateway。<code>hermes gateway stop --all</code> 使用全局 <code>ps aux</code> 扫描来终止所有 gateway 进程（用于更新时）。</p></div></article><hr/><div class="page-footer"></div></div><div class="right sidebar"><div class="graph"><h3>关系图谱</h3><div class="graph-outer"><div class="graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:1,&quot;scale&quot;:1.1,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.3,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:false,&quot;enableRadial&quot;:false}"></div><button class="global-graph-icon" aria-label="Global Graph"><svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 55 55" fill="currentColor" xml:space="preserve"><path d="M49,0c-3.309,0-6,2.691-6,6c0,1.035,0.263,2.009,0.726,2.86l-9.829,9.829C32.542,17.634,30.846,17,29,17
+                s-3.542,0.634-4.898,1.688l-7.669-7.669C16.785,10.424,17,9.74,17,9c0-2.206-1.794-4-4-4S9,6.794,9,9s1.794,4,4,4
+                c0.74,0,1.424-0.215,2.019-0.567l7.669,7.669C21.634,21.458,21,23.154,21,25s0.634,3.542,1.688,4.897L10.024,42.562
+                C8.958,41.595,7.549,41,6,41c-3.309,0-6,2.691-6,6s2.691,6,6,6s6-2.691,6-6c0-1.035-0.263-2.009-0.726-2.86l12.829-12.829
+                c1.106,0.86,2.44,1.436,3.898,1.619v10.16c-2.833,0.478-5,2.942-5,5.91c0,3.309,2.691,6,6,6s6-2.691,6-6c0-2.967-2.167-5.431-5-5.91
+                v-10.16c1.458-0.183,2.792-0.759,3.898-1.619l7.669,7.669C41.215,39.576,41,40.26,41,41c0,2.206,1.794,4,4,4s4-1.794,4-4
+                s-1.794-4-4-4c-0.74,0-1.424,0.215-2.019,0.567l-7.669-7.669C36.366,28.542,37,26.846,37,25s-0.634-3.542-1.688-4.897l9.665-9.665
+                C46.042,11.405,47.451,12,49,12c3.309,0,6-2.691,6-6S52.309,0,49,0z M11,9c0-1.103,0.897-2,2-2s2,0.897,2,2s-0.897,2-2,2
+                S11,10.103,11,9z M6,51c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S8.206,51,6,51z M33,49c0,2.206-1.794,4-4,4s-4-1.794-4-4
+                s1.794-4,4-4S33,46.794,33,49z M29,31c-3.309,0-6-2.691-6-6s2.691-6,6-6s6,2.691,6,6S32.309,31,29,31z M47,41c0,1.103-0.897,2-2,2
+                s-2-0.897-2-2s0.897-2,2-2S47,39.897,47,41z M49,10c-2.206,0-4-1.794-4-4s1.794-4,4-4s4,1.794,4,4S51.206,10,49,10z"></path></svg></button></div><div class="global-graph-outer"><div class="global-graph-container" data-cfg="{&quot;drag&quot;:true,&quot;zoom&quot;:true,&quot;depth&quot;:-1,&quot;scale&quot;:0.9,&quot;repelForce&quot;:0.5,&quot;centerForce&quot;:0.2,&quot;linkDistance&quot;:30,&quot;fontSize&quot;:0.6,&quot;opacityScale&quot;:1,&quot;showTags&quot;:true,&quot;removeTags&quot;:[],&quot;focusOnHover&quot;:true,&quot;enableRadial&quot;:true}"></div></div></div><div class="toc"><button type="button" class="toc-header" aria-controls="toc-1" aria-expanded="true"><h3>目录</h3><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="fold"><polyline points="6 9 12 15 18 9"></polyline></svg></button><ul id="list-0" class="toc-content overflow"><li class="depth-0"><a href="#gateway-内部机制" data-for="gateway-内部机制">Gateway 内部机制</a></li><li class="depth-1"><a href="#关键文件" data-for="关键文件">关键文件</a></li><li class="depth-1"><a href="#架构概览" data-for="架构概览">架构概览</a></li><li class="depth-1"><a href="#消息流程" data-for="消息流程">消息流程</a></li><li class="depth-2"><a href="#会话键格式" data-for="会话键格式">会话键格式</a></li><li class="depth-2"><a href="#两级消息守卫" data-for="两级消息守卫">两级消息守卫</a></li><li class="depth-1"><a href="#授权" data-for="授权">授权</a></li><li class="depth-2"><a href="#dm-配对流程" data-for="dm-配对流程">DM 配对流程</a></li><li class="depth-1"><a href="#斜杠命令分发" data-for="斜杠命令分发">斜杠命令分发</a></li><li class="depth-2"><a href="#运行中-agent-守卫" data-for="运行中-agent-守卫">运行中 Agent 守卫</a></li><li class="depth-1"><a href="#配置来源" data-for="配置来源">配置来源</a></li><li class="depth-1"><a href="#平台适配器" data-for="平台适配器">平台适配器</a></li><li class="depth-2"><a href="#token-锁" data-for="token-锁">Token 锁</a></li><li class="depth-1"><a href="#投递路径" data-for="投递路径">投递路径</a></li><li class="depth-1"><a href="#hooks" data-for="hooks">Hooks</a></li><li class="depth-2"><a href="#gateway-hook-事件" data-for="gateway-hook-事件">Gateway Hook 事件</a></li><li class="depth-1"><a href="#内存提供者集成" data-for="内存提供者集成">内存提供者集成</a></li><li class="depth-2"><a href="#内存刷写生命周期" data-for="内存刷写生命周期">内存刷写生命周期</a></li><li class="depth-1"><a href="#后台维护" data-for="后台维护">后台维护</a></li><li class="depth-1"><a href="#进程管理" data-for="进程管理">进程管理</a></li><li class="overflow-end"></li></ul></div></div><footer class><p>Created with <a href="https://quartz.jzhao.xyz/">Quartz v5.0.0</a> © 2026</p><ul><li><a href="https://github.com/jackyzha0/quartz">GitHub</a></li><li><a href="https://discord.gg/cRFFHYye7t">Discord Community</a></li></ul></footer></div></div></body><script src="../../../static/resource-after-e13fffa1.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-8b336f9a.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-baba652b.js" type="application/javascript" data-persist="true"></script><script src="../../../static/resource-after-5eb75950.js" type="module" data-persist="true"></script><script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/copy-tex.min.js" type="application/javascript" data-persist="true"></script><script src="../../../postscript-503771fb.js" type="module" data-persist="true"></script></html>
